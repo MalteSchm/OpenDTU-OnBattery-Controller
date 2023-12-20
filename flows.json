@@ -55,14 +55,6 @@
         "env": []
     },
     {
-        "id": "d402ef935aad90d5",
-        "type": "tab",
-        "label": "Hausverbrauch",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "cf76c2158bee1883",
         "type": "tab",
         "label": "Historie",
@@ -2585,12 +2577,12 @@
         "env": [
             {
                 "name": "latitude",
-                "value": "49.37",
+                "value": "49.45",
                 "type": "num"
             },
             {
                 "name": "longitude",
-                "value": "11.2",
+                "value": "11.07",
                 "type": "num"
             },
             {
@@ -2649,12 +2641,12 @@
         "env": [
             {
                 "name": "latitude",
-                "value": "49.37",
+                "value": "49.45",
                 "type": "num"
             },
             {
                 "name": "longitude",
-                "value": "11.2",
+                "value": "11.07",
                 "type": "num"
             },
             {
@@ -2758,12 +2750,12 @@
         "env": [
             {
                 "name": "latitude",
-                "value": "49.37",
+                "value": "49.45",
                 "type": "num"
             },
             {
                 "name": "longitude",
-                "value": "11.2",
+                "value": "11.07",
                 "type": "num"
             },
             {
@@ -3898,185 +3890,6 @@
         "className": "",
         "x": 1340,
         "y": 120,
-        "wires": []
-    },
-    {
-        "id": "1a4b5dcd536f6153",
-        "type": "influxdb out",
-        "z": "d402ef935aad90d5",
-        "influxdb": "b063cd9b987f7450",
-        "name": "",
-        "measurement": "Leistungsdaten",
-        "precision": "",
-        "retentionPolicy": "",
-        "database": "database",
-        "precisionV18FluxV20": "ms",
-        "retentionPolicyV18Flux": "",
-        "org": "organisation",
-        "bucket": "bucket",
-        "x": 850,
-        "y": 380,
-        "wires": []
-    },
-    {
-        "id": "13c14ae275de7fd5",
-        "type": "mqtt in",
-        "z": "d402ef935aad90d5",
-        "name": "",
-        "topic": "shellies/shellyem3-34945474A444/emeter/0/power",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "aa30341bcc52e33c",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 190,
-        "y": 180,
-        "wires": [
-            [
-                "c713e30ffa894fcf"
-            ]
-        ]
-    },
-    {
-        "id": "c563fff7490c1ef1",
-        "type": "mqtt in",
-        "z": "d402ef935aad90d5",
-        "name": "",
-        "topic": "shellies/shellyem3-34945474A444/emeter/1/power",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "aa30341bcc52e33c",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 190,
-        "y": 220,
-        "wires": [
-            [
-                "c713e30ffa894fcf"
-            ]
-        ]
-    },
-    {
-        "id": "60d7461ef4f0559d",
-        "type": "mqtt in",
-        "z": "d402ef935aad90d5",
-        "name": "",
-        "topic": "shellies/shellyem3-34945474A444/emeter/2/power",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "aa30341bcc52e33c",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 190,
-        "y": 260,
-        "wires": [
-            [
-                "c713e30ffa894fcf"
-            ]
-        ]
-    },
-    {
-        "id": "c713e30ffa894fcf",
-        "type": "join",
-        "z": "d402ef935aad90d5",
-        "name": "",
-        "mode": "custom",
-        "build": "array",
-        "property": "payload",
-        "propertyType": "msg",
-        "key": "topic",
-        "joiner": "\\n",
-        "joinerType": "str",
-        "accumulate": false,
-        "timeout": "",
-        "count": "3",
-        "reduceRight": false,
-        "reduceExp": "",
-        "reduceInit": "",
-        "reduceInitType": "",
-        "reduceFixup": "",
-        "x": 470,
-        "y": 220,
-        "wires": [
-            [
-                "08f79126ef65771b"
-            ]
-        ]
-    },
-    {
-        "id": "e9b53078ef7daf35",
-        "type": "debug",
-        "z": "d402ef935aad90d5",
-        "name": "debug 11",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 800,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "08f79126ef65771b",
-        "type": "function",
-        "z": "d402ef935aad90d5",
-        "name": "function 4",
-        "func": "let sum = 0;\n\nmsg.payload.map(x => sum += x);\n\nmsg.payload = sum.toFixed(2);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 600,
-        "y": 220,
-        "wires": [
-            [
-                "e9b53078ef7daf35"
-            ]
-        ]
-    },
-    {
-        "id": "6400b422cdacf5e6",
-        "type": "function",
-        "z": "d402ef935aad90d5",
-        "name": "function 5",
-        "func": "\nlet last_current = context.get(\"last_current\") || 0; //to retrieve a variable  \n\nvar huawei_ac_charger_enabled = flow.get('huawei_ac_charger_enabled') || false;\n\n// Charger is disabled\nif (!huawei_ac_charger_enabled) {\n    msg.payload = 0;\n    return msg;\n}\n\n\nlet current = last_current - (msg.payload / 52);\n\n// We're at max current\nif (current > 30) {\n    msg.payload = 30;\n    context.set(\"last_current\", msg.payload); // to store a variable\n    return msg;\n}\n\n// We're below min disable\nif (current < 3 ) {\n    context.set(\"last_current\", msg.payload); // to store a variable\n    msg.payload = 0;\n    return msg;\n} \n\n// We're in the right range\n//msg.payload = current.toFixed(1) - 1;\ncontext.set(\"last_current\", msg.payload); // to store a variable\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 780,
-        "y": 480,
-        "wires": [
-            [
-                "994714171991c331"
-            ]
-        ]
-    },
-    {
-        "id": "994714171991c331",
-        "type": "debug",
-        "z": "d402ef935aad90d5",
-        "name": "debug 13",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 960,
-        "y": 440,
         "wires": []
     },
     {
