@@ -533,29 +533,6 @@
         }
     },
     {
-        "id": "b063cd9b987f7450",
-        "type": "influxdb",
-        "hostname": "127.0.0.1",
-        "port": "8086",
-        "protocol": "http",
-        "database": "home_data",
-        "name": "LocaleDB",
-        "usetls": false,
-        "tls": "",
-        "influxdbVersion": "1.x",
-        "url": "http://localhost:8086",
-        "rejectUnauthorized": true
-    },
-    {
-        "id": "592b8cb1ef123066",
-        "type": "tibber-api-endpoint",
-        "queryUrl": "https://api.tibber.com/v1-beta/gql",
-        "feedConnectionTimeout": "30",
-        "feedTimeout": "60",
-        "queryRequestTimeout": "30",
-        "name": "Tibber-Malte"
-    },
-    {
         "id": "646a995fc1b49a9e",
         "type": "tls-config",
         "name": "",
