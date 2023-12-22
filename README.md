@@ -46,3 +46,7 @@ Dieses Projekt enthält mehrere Node Red flows die grösstenteils unabhängig vo
 Die einzelnen Flows die den Power Limiter, das Netzteil und den TeslaSolarCharger steuern stellen den Betriebzustand und den Grund für diesen Zustand in dem Statusfeld dar.
 
 Sollte jemand zu Tibber wechseln wollen: Hier wäre ein Einladungslink. Gibt für beide 50€ Bonus https://invite.tibber.com/qjcbsdwr
+
+# Screenshot
+
+![Screenshot](Screenshot.png)
