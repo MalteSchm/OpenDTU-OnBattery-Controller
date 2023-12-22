@@ -21,7 +21,7 @@ Dieses Projekt enthält mehrere Node Red flows die grösstenteils unabhängig vo
 * Übersicht
   * Dieser Flow empfängt Informationen per MQTT aus OpenDTU-OnBattery und stellt diese in der Übersicht in der UI dar.
 * Durchschnittspreisberechnung: 
-  * Dieser Flow holt die EPEX Strompreisdaten des aktuellen Tages über die Awattar API und speichert diese Informationen. 
+  * Dieser Flow holt die EPEX Strompreisdaten des aktuellen Tages über die Awattar API und speichert diese Informationen. Diese werden ohne andere Preisbestandteile verwendet (Netzdurchleitung, MWst, ....)
   Er ermittelt ausserdem den aktuellen Strompreis und stellt die Preise in einem Diagramm dar.
 * Aktueller Ertrag:
   * Dieser einfache Flow wird verwendet um den Ertrag mehrerer Inverter zu kombinieren. Die Daten werden über MQTT empfangen und publiziert.
@@ -44,3 +44,5 @@ Dieses Projekt enthält mehrere Node Red flows die grösstenteils unabhängig vo
   * Dieser Flow stellt verschiedene Daten über die Zeit dar.
 
 Die einzelnen Flows die den Power Limiter, das Netzteil und den TeslaSolarCharger steuern stellen den Betriebzustand und den Grund für diesen Zustand in dem Statusfeld dar.
+
+Sollte jemand zu Tibber wechseln wollen: Hier wäre ein Einladungslink. Gibt für beide 50€ Bonus https://invite.tibber.com/qjcbsdwr
