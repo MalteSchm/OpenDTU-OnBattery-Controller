@@ -1,0 +1,427 @@
+[
+  {
+      "id": "cac5d58849cb543a",
+      "type": "tab",
+      "label": "Huawei Netzteil",
+      "disabled": false,
+      "info": "",
+      "env": []
+  },
+  {
+      "id": "010a9cca9692b436",
+      "type": "function",
+      "z": "cac5d58849cb543a",
+      "name": "Transform",
+      "func": "var soc = global.get('state.opendtu.soc') || 0;\nvar forecast = global.get('forecast.garage.result') || {};\n\nvar epex_current_price = global.get('epex.current_price');\nif (typeof epex_current_price == \"undefined\") {\n    epex_current_price = 0.3;\n}\n\nvar huawei_X_price = global.get('ui.opendtu.huawei_X_price');\nif (typeof huawei_X_price == \"undefined\") {\n    huawei_X_price = 0.3;\n} else {\n    huawei_X_price = huawei_X_price / 100;\n}\n\nvar huawei_charging_current = global.get('ui.opendtu.huawei_charging_current') || 10;\nvar huawei_charging_voltage = global.get('ui.opendtu.huawei_charging_voltage') || 42;\nvar battery_full_soc = global.get('ui.opendtu.battery_full_soc') || 90;\nvar battery_capacity = global.get('ui.opendtu.battery_capacity') || 4800;\n\nvar msg = {};\nmsg.payload = 0\n\n// Turn off if battery is full\nif (soc >= (battery_full_soc - 1)) {\n    msg.payload = 2;  // Let openDTU disable the PSU ... \n    msg.current = 0;  // ... as we set current to 0A here\n    msg.text = \"Inaktiv - Batterie voll\";\n    return msg;\n}\n\n// Enable full power if price is low\nif (epex_current_price < huawei_X_price) {\n    msg.payload = 2;  // Let openDTU enable\n    msg.current = huawei_charging_current;\n    msg.voltage = huawei_charging_voltage;\n    msg.text = \"Strompreis niedrig - Volle Leistung\";\n    return msg;\n}\n\n\n// Check expected energy\n// Get the current date and time\nconst currentDate = new Date();\nvar expected_energy = 0;\nfor (const timestamp_string in forecast) {\n\n    // Convert the timestamp string into a Date object\n    const timestamp = new Date(timestamp_string);\n\n    // Sum energy if timestamp is today in the future\n    if (timestamp > currentDate && \n        timestamp.getDate() === currentDate.getDate()) {\n        expected_energy += forecast[timestamp_string];\n    } \n}\n\n//node.warn(\"Expected: \" + expected_energy);\nif (expected_energy * 0.7 < (battery_capacity * (100 - soc) / 100)) {\n    msg.payload = 3;  // Use auto power in this case\n    msg.current = 0;  \n    msg.text = \"Automatisch\";\n    return msg;\n}\n\nmsg.payload = 2;  // Let openDTU disable the PSU ...\nmsg.current = 0;  // ... as we set current to 0A here\nmsg.text = \"Inaktiv\";\nreturn msg;\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 560,
+      "y": 400,
+      "wires": [
+          [
+              "b7db5d17099fb8b9",
+              "01d5eeaeb8b0608c",
+              "7d08df32116b9a40",
+              "6e7d2ea40a060edd",
+              "2d77315978d8b11f"
+          ]
+      ]
+  },
+  {
+      "id": "2d77315978d8b11f",
+      "type": "mqtt out",
+      "z": "cac5d58849cb543a",
+      "name": "",
+      "topic": "solar/huawei/cmd/mode",
+      "qos": "",
+      "retain": "",
+      "respTopic": "",
+      "contentType": "",
+      "userProps": "",
+      "correl": "",
+      "expiry": "",
+      "broker": "aa30341bcc52e33c",
+      "x": 1010,
+      "y": 400,
+      "wires": []
+  },
+  {
+      "id": "2b7eb4d8ad0cf6fa",
+      "type": "change",
+      "z": "cac5d58849cb543a",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.opendtu.huawei_X_price",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 470,
+      "y": 60,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "23f64190f6451f4e",
+      "type": "change",
+      "z": "cac5d58849cb543a",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.opendtu.huawei_charging_current",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 470,
+      "y": 120,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "b7db5d17099fb8b9",
+      "type": "debug",
+      "z": "cac5d58849cb543a",
+      "name": "debug 25",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "payload",
+      "targetType": "msg",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 760,
+      "y": 360,
+      "wires": []
+  },
+  {
+      "id": "6b6c53544686444f",
+      "type": "inject",
+      "z": "cac5d58849cb543a",
+      "name": "",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "60",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 210,
+      "y": 400,
+      "wires": [
+          [
+              "010a9cca9692b436"
+          ]
+      ]
+  },
+  {
+      "id": "01d5eeaeb8b0608c",
+      "type": "change",
+      "z": "cac5d58849cb543a",
+      "name": "Current",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "current",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 760,
+      "y": 480,
+      "wires": [
+          [
+              "9b31d085f493b9f6",
+              "07d51d1ac278ccb6"
+          ]
+      ]
+  },
+  {
+      "id": "9b31d085f493b9f6",
+      "type": "debug",
+      "z": "cac5d58849cb543a",
+      "name": "debug 26",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 920,
+      "y": 460,
+      "wires": []
+  },
+  {
+      "id": "7d08df32116b9a40",
+      "type": "ui_text",
+      "z": "cac5d58849cb543a",
+      "group": "6b3d148bced0a7a4",
+      "order": 1,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Status",
+      "format": "{{msg.text}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 730,
+      "y": 600,
+      "wires": []
+  },
+  {
+      "id": "07d51d1ac278ccb6",
+      "type": "mqtt out",
+      "z": "cac5d58849cb543a",
+      "name": "",
+      "topic": "solar/huawei/cmd/limit_online_current",
+      "qos": "",
+      "retain": "",
+      "respTopic": "",
+      "contentType": "",
+      "userProps": "",
+      "correl": "",
+      "expiry": "",
+      "broker": "aa30341bcc52e33c",
+      "x": 1210,
+      "y": 480,
+      "wires": []
+  },
+  {
+      "id": "6a06404112773814",
+      "type": "change",
+      "z": "cac5d58849cb543a",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.opendtu.huawei_charging_voltage",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 470,
+      "y": 180,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "de87835998115101",
+      "type": "mqtt out",
+      "z": "cac5d58849cb543a",
+      "name": "",
+      "topic": "solar/huawei/cmd/limit_online_voltage",
+      "qos": "",
+      "retain": "",
+      "respTopic": "",
+      "contentType": "",
+      "userProps": "",
+      "correl": "",
+      "expiry": "",
+      "broker": "aa30341bcc52e33c",
+      "x": 1210,
+      "y": 540,
+      "wires": []
+  },
+  {
+      "id": "6e7d2ea40a060edd",
+      "type": "change",
+      "z": "cac5d58849cb543a",
+      "name": "Voltage",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "voltage",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 760,
+      "y": 540,
+      "wires": [
+          [
+              "de87835998115101"
+          ]
+      ]
+  },
+  {
+      "id": "a12d552a3f5373c2",
+      "type": "ui_numeric",
+      "z": "cac5d58849cb543a",
+      "name": "",
+      "label": "Voll aktiv ab Strompreis",
+      "tooltip": "Liegt der Strompreis unter dieser Grenze wird das Netzteil mit gewählter Leistung gestartet",
+      "group": "6b3d148bced0a7a4",
+      "order": 2,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "-10",
+      "max": "15",
+      "step": "0.1",
+      "className": "",
+      "x": 250,
+      "y": 60,
+      "wires": [
+          [
+              "2b7eb4d8ad0cf6fa"
+          ]
+      ]
+  },
+  {
+      "id": "48abe7daaebb67ef",
+      "type": "ui_numeric",
+      "z": "cac5d58849cb543a",
+      "name": "",
+      "label": "Ladespannung",
+      "tooltip": "",
+      "group": "6b3d148bced0a7a4",
+      "order": 3,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "42",
+      "max": "58",
+      "step": "0.1",
+      "className": "",
+      "x": 280,
+      "y": 180,
+      "wires": [
+          [
+              "6a06404112773814"
+          ]
+      ]
+  },
+  {
+      "id": "bef08713c953f746",
+      "type": "ui_numeric",
+      "z": "cac5d58849cb543a",
+      "name": "",
+      "label": "Ladestrom",
+      "tooltip": "",
+      "group": "6b3d148bced0a7a4",
+      "order": 4,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "1",
+      "max": "56",
+      "step": "1",
+      "className": "",
+      "x": 290,
+      "y": 120,
+      "wires": [
+          [
+              "23f64190f6451f4e"
+          ]
+      ]
+  },
+  {
+      "id": "aa30341bcc52e33c",
+      "type": "mqtt-broker",
+      "name": "Raspberry",
+      "broker": "localhost",
+      "port": "1883",
+      "clientid": "",
+      "autoConnect": true,
+      "usetls": false,
+      "protocolVersion": "4",
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "birthMsg": {},
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "closeMsg": {},
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": "",
+      "willMsg": {},
+      "userProps": "",
+      "sessionExpiry": ""
+  },
+  {
+      "id": "6b3d148bced0a7a4",
+      "type": "ui_group",
+      "name": "Huawei Netzteil",
+      "tab": "e5b1aeb5977e428a",
+      "order": 4,
+      "disp": true,
+      "width": "6",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "e5b1aeb5977e428a",
+      "type": "ui_tab",
+      "name": "Home",
+      "icon": "dashboard",
+      "order": 1,
+      "disabled": false,
+      "hidden": false
+  }
+]

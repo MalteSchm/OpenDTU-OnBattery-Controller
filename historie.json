@@ -1,0 +1,517 @@
+[
+  {
+      "id": "cf76c2158bee1883",
+      "type": "tab",
+      "label": "Historie",
+      "disabled": false,
+      "info": "",
+      "env": []
+  },
+  {
+      "id": "d3d0cab4c7fb1d5c",
+      "type": "change",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "rules": [
+          {
+              "t": "set",
+              "p": "topic",
+              "pt": "msg",
+              "to": "Hoymiles",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 420,
+      "y": 140,
+      "wires": [
+          [
+              "d44ebaf7da41fde2"
+          ]
+      ]
+  },
+  {
+      "id": "18f58f68a1032259",
+      "type": "ui_chart",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "group": "d0745224b97dc204",
+      "order": 1,
+      "width": 0,
+      "height": 0,
+      "label": "Leistungen",
+      "chartType": "line",
+      "legend": "true",
+      "xformat": "HH:mm",
+      "interpolate": "linear",
+      "nodata": "",
+      "dot": false,
+      "ymin": "0",
+      "ymax": "",
+      "removeOlder": "6",
+      "removeOlderPoints": "",
+      "removeOlderUnit": "3600",
+      "cutout": 0,
+      "useOneColor": false,
+      "useUTC": false,
+      "colors": [
+          "#1f77b4",
+          "#aec7e8",
+          "#ff7f0e",
+          "#2ca02c",
+          "#98df8a",
+          "#d62728",
+          "#ff9896",
+          "#9467bd",
+          "#c5b0d5"
+      ],
+      "outputs": 1,
+      "useDifferentColor": false,
+      "className": "",
+      "x": 970,
+      "y": 160,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "9f693fce43608fc6",
+      "type": "mqtt in",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "topic": "sbfspot_2130252068",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 180,
+      "y": 100,
+      "wires": [
+          [
+              "2344af9f0c5cdeec"
+          ]
+      ]
+  },
+  {
+      "id": "2344af9f0c5cdeec",
+      "type": "change",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "payload.PACTot",
+              "tot": "msg"
+          },
+          {
+              "t": "set",
+              "p": "topic",
+              "pt": "msg",
+              "to": "Dach",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 430,
+      "y": 100,
+      "wires": [
+          [
+              "b3610e3f7617805a"
+          ]
+      ]
+  },
+  {
+      "id": "eb15e9fb8ca4bc26",
+      "type": "mqtt in",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "topic": "solar/ac/power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 200,
+      "y": 140,
+      "wires": [
+          [
+              "d3d0cab4c7fb1d5c"
+          ]
+      ]
+  },
+  {
+      "id": "ad07a914b2996718",
+      "type": "mqtt in",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "topic": "solar/victron/HQ2235ANX7J/PPV",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 190,
+      "y": 180,
+      "wires": [
+          [
+              "749467dafbe90162"
+          ]
+      ]
+  },
+  {
+      "id": "a2480bd687ca456a",
+      "type": "mqtt in",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "topic": "solar/battery/stateOfCharge",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 200,
+      "y": 280,
+      "wires": [
+          [
+              "bd2be7fc43e31408"
+          ]
+      ]
+  },
+  {
+      "id": "03c50a1a105cae93",
+      "type": "mqtt in",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "topic": "solar/huawei/output_power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 210,
+      "y": 220,
+      "wires": [
+          [
+              "c5ba248ed94edc48"
+          ]
+      ]
+  },
+  {
+      "id": "749467dafbe90162",
+      "type": "change",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "rules": [
+          {
+              "t": "set",
+              "p": "topic",
+              "pt": "msg",
+              "to": "Victron",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 420,
+      "y": 180,
+      "wires": [
+          [
+              "3406b1f2cd9cc636"
+          ]
+      ]
+  },
+  {
+      "id": "c5ba248ed94edc48",
+      "type": "change",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "rules": [
+          {
+              "t": "set",
+              "p": "topic",
+              "pt": "msg",
+              "to": "Huawei",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 420,
+      "y": 220,
+      "wires": [
+          [
+              "aba7f659244cdc49"
+          ]
+      ]
+  },
+  {
+      "id": "bd2be7fc43e31408",
+      "type": "change",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "rules": [
+          {
+              "t": "set",
+              "p": "topic",
+              "pt": "msg",
+              "to": "SoC",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 420,
+      "y": 280,
+      "wires": [
+          [
+              "07d9db1ed0bff173"
+          ]
+      ]
+  },
+  {
+      "id": "82c56611a2d803b4",
+      "type": "ui_chart",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "group": "d0745224b97dc204",
+      "order": 2,
+      "width": 0,
+      "height": 0,
+      "label": "Ladezustand",
+      "chartType": "line",
+      "legend": "true",
+      "xformat": "HH:mm",
+      "interpolate": "linear",
+      "nodata": "",
+      "dot": false,
+      "ymin": "0",
+      "ymax": "90",
+      "removeOlder": "6",
+      "removeOlderPoints": "",
+      "removeOlderUnit": "3600",
+      "cutout": 0,
+      "useOneColor": false,
+      "useUTC": false,
+      "colors": [
+          "#1f77b4",
+          "#aec7e8",
+          "#ff7f0e",
+          "#2ca02c",
+          "#98df8a",
+          "#d62728",
+          "#ff9896",
+          "#9467bd",
+          "#c5b0d5"
+      ],
+      "outputs": 1,
+      "useDifferentColor": false,
+      "className": "",
+      "x": 970,
+      "y": 280,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "aba7f659244cdc49",
+      "type": "delay",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "pauseType": "rate",
+      "timeout": "5",
+      "timeoutUnits": "seconds",
+      "rate": "1",
+      "nbRateUnits": "1",
+      "rateUnits": "minute",
+      "randomFirst": "1",
+      "randomLast": "5",
+      "randomUnits": "seconds",
+      "drop": true,
+      "allowrate": false,
+      "outputs": 1,
+      "x": 680,
+      "y": 220,
+      "wires": [
+          [
+              "18f58f68a1032259"
+          ]
+      ]
+  },
+  {
+      "id": "07d9db1ed0bff173",
+      "type": "delay",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "pauseType": "rate",
+      "timeout": "5",
+      "timeoutUnits": "seconds",
+      "rate": "1",
+      "nbRateUnits": "1",
+      "rateUnits": "minute",
+      "randomFirst": "1",
+      "randomLast": "5",
+      "randomUnits": "seconds",
+      "drop": true,
+      "allowrate": false,
+      "outputs": 1,
+      "x": 680,
+      "y": 280,
+      "wires": [
+          [
+              "82c56611a2d803b4"
+          ]
+      ]
+  },
+  {
+      "id": "3406b1f2cd9cc636",
+      "type": "delay",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "pauseType": "rate",
+      "timeout": "5",
+      "timeoutUnits": "seconds",
+      "rate": "1",
+      "nbRateUnits": "1",
+      "rateUnits": "minute",
+      "randomFirst": "1",
+      "randomLast": "5",
+      "randomUnits": "seconds",
+      "drop": true,
+      "allowrate": false,
+      "outputs": 1,
+      "x": 680,
+      "y": 180,
+      "wires": [
+          [
+              "18f58f68a1032259"
+          ]
+      ]
+  },
+  {
+      "id": "d44ebaf7da41fde2",
+      "type": "delay",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "pauseType": "rate",
+      "timeout": "5",
+      "timeoutUnits": "seconds",
+      "rate": "1",
+      "nbRateUnits": "1",
+      "rateUnits": "minute",
+      "randomFirst": "1",
+      "randomLast": "5",
+      "randomUnits": "seconds",
+      "drop": true,
+      "allowrate": false,
+      "outputs": 1,
+      "x": 680,
+      "y": 140,
+      "wires": [
+          [
+              "18f58f68a1032259"
+          ]
+      ]
+  },
+  {
+      "id": "b3610e3f7617805a",
+      "type": "delay",
+      "z": "cf76c2158bee1883",
+      "name": "",
+      "pauseType": "rate",
+      "timeout": "5",
+      "timeoutUnits": "seconds",
+      "rate": "1",
+      "nbRateUnits": "1",
+      "rateUnits": "minute",
+      "randomFirst": "1",
+      "randomLast": "5",
+      "randomUnits": "seconds",
+      "drop": true,
+      "allowrate": false,
+      "outputs": 1,
+      "x": 680,
+      "y": 100,
+      "wires": [
+          [
+              "18f58f68a1032259"
+          ]
+      ]
+  },
+  {
+      "id": "d0745224b97dc204",
+      "type": "ui_group",
+      "name": "Charts",
+      "tab": "30f57a77d8fba331",
+      "order": 1,
+      "disp": true,
+      "width": "10",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "aa30341bcc52e33c",
+      "type": "mqtt-broker",
+      "name": "Raspberry",
+      "broker": "localhost",
+      "port": "1883",
+      "clientid": "",
+      "autoConnect": true,
+      "usetls": false,
+      "protocolVersion": "4",
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "birthMsg": {},
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "closeMsg": {},
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": "",
+      "willMsg": {},
+      "userProps": "",
+      "sessionExpiry": ""
+  },
+  {
+      "id": "30f57a77d8fba331",
+      "type": "ui_tab",
+      "name": "Historie",
+      "icon": "dashboard",
+      "order": 2,
+      "disabled": false,
+      "hidden": false
+  }
+]

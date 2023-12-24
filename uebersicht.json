@@ -1,0 +1,811 @@
+[
+  {
+      "id": "6e0fbe3dc2362892",
+      "type": "tab",
+      "label": "Übersicht",
+      "disabled": false,
+      "info": "",
+      "env": []
+  },
+  {
+      "id": "75c6443f65472958",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "topic": "solar/battery/stateOfCharge",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 460,
+      "y": 120,
+      "wires": [
+          [
+              "836988e085fae016",
+              "dba71b7baf7ae17c"
+          ]
+      ]
+  },
+  {
+      "id": "836988e085fae016",
+      "type": "change",
+      "z": "6e0fbe3dc2362892",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "state.opendtu.soc",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 650,
+      "y": 120,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "dba71b7baf7ae17c",
+      "type": "ui_text",
+      "z": "6e0fbe3dc2362892",
+      "group": "c6e5f2ecf404d59e",
+      "order": 2,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "SoC",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 650,
+      "y": 160,
+      "wires": []
+  },
+  {
+      "id": "0a0ab44b432dd7d8",
+      "type": "ui_text",
+      "z": "6e0fbe3dc2362892",
+      "group": "c6e5f2ecf404d59e",
+      "order": 6,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "MPPT Leistung",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 660,
+      "y": 440,
+      "wires": []
+  },
+  {
+      "id": "02ddcbdb41e78f25",
+      "type": "ui_text",
+      "z": "6e0fbe3dc2362892",
+      "group": "c6e5f2ecf404d59e",
+      "order": 4,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Inverter Leistung",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 670,
+      "y": 320,
+      "wires": []
+  },
+  {
+      "id": "5fad30e33d583c70",
+      "type": "ui_text",
+      "z": "6e0fbe3dc2362892",
+      "group": "c6e5f2ecf404d59e",
+      "order": 3,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Hausverbauch",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 660,
+      "y": 260,
+      "wires": []
+  },
+  {
+      "id": "e1a9cebc799ce18b",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "topic": "solar/victron/HQ2235ANX7J/PPV",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 430,
+      "y": 440,
+      "wires": [
+          [
+              "0a0ab44b432dd7d8"
+          ]
+      ]
+  },
+  {
+      "id": "1952a4cc576f49a5",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "topic": "solar/ac/power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 480,
+      "y": 320,
+      "wires": [
+          [
+              "02ddcbdb41e78f25"
+          ]
+      ]
+  },
+  {
+      "id": "6a44e6869e2774aa",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "Phase 1",
+      "topic": "shellies/shellyem3-34945474A444/emeter/0/power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 220,
+      "y": 220,
+      "wires": [
+          [
+              "c2804469f3645a0c"
+          ]
+      ]
+  },
+  {
+      "id": "21c865939b63ad9c",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "Phase 2",
+      "topic": "shellies/shellyem3-34945474A444/emeter/1/power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 220,
+      "y": 260,
+      "wires": [
+          [
+              "c2804469f3645a0c"
+          ]
+      ]
+  },
+  {
+      "id": "7f0516d062758b66",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "Phase 3",
+      "topic": "shellies/shellyem3-34945474A444/emeter/2/power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 220,
+      "y": 300,
+      "wires": [
+          [
+              "c2804469f3645a0c"
+          ]
+      ]
+  },
+  {
+      "id": "c2804469f3645a0c",
+      "type": "join",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "mode": "custom",
+      "build": "array",
+      "property": "payload",
+      "propertyType": "msg",
+      "key": "topic",
+      "joiner": "\\n",
+      "joinerType": "str",
+      "accumulate": false,
+      "timeout": "",
+      "count": "3",
+      "reduceRight": false,
+      "reduceExp": "",
+      "reduceInit": "",
+      "reduceInitType": "",
+      "reduceFixup": "",
+      "x": 350,
+      "y": 260,
+      "wires": [
+          [
+              "1b08792067a8d7bc"
+          ]
+      ]
+  },
+  {
+      "id": "1b08792067a8d7bc",
+      "type": "function",
+      "z": "6e0fbe3dc2362892",
+      "name": "function 11",
+      "func": "let sum = 0;\n\nmsg.payload.map(x => sum += x);\n\nmsg.payload = sum.toFixed(2);\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 480,
+      "y": 260,
+      "wires": [
+          [
+              "5fad30e33d583c70"
+          ]
+      ]
+  },
+  {
+      "id": "807450773ccae49f",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "topic": "solar/huawei/output_power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 450,
+      "y": 380,
+      "wires": [
+          [
+              "8974accd87d29b80"
+          ]
+      ]
+  },
+  {
+      "id": "8974accd87d29b80",
+      "type": "ui_text",
+      "z": "6e0fbe3dc2362892",
+      "group": "c6e5f2ecf404d59e",
+      "order": 5,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Huawei Leistung",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 670,
+      "y": 380,
+      "wires": []
+  },
+  {
+      "id": "f960aa6ce5d65064",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "topic": "solar/battery/alarm/#",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 150,
+      "y": 560,
+      "wires": [
+          [
+              "a8b9c2a40c96cb81"
+          ]
+      ]
+  },
+  {
+      "id": "a8b9c2a40c96cb81",
+      "type": "switch",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "property": "payload",
+      "propertyType": "msg",
+      "rules": [
+          {
+              "t": "eq",
+              "v": "0",
+              "vt": "num"
+          },
+          {
+              "t": "eq",
+              "v": "1",
+              "vt": "num"
+          }
+      ],
+      "checkall": "true",
+      "repair": false,
+      "outputs": 2,
+      "x": 330,
+      "y": 560,
+      "wires": [
+          [],
+          [
+              "753f80d55d088ce5"
+          ]
+      ]
+  },
+  {
+      "id": "753f80d55d088ce5",
+      "type": "trigger",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "op1": "1",
+      "op2": "0",
+      "op1type": "num",
+      "op2type": "num",
+      "duration": "5",
+      "extend": true,
+      "overrideDelay": false,
+      "units": "s",
+      "reset": "",
+      "bytopic": "all",
+      "topic": "topic",
+      "outputs": 1,
+      "x": 480,
+      "y": 580,
+      "wires": [
+          [
+              "249ce21883088b0a"
+          ]
+      ]
+  },
+  {
+      "id": "249ce21883088b0a",
+      "type": "ui_led",
+      "z": "6e0fbe3dc2362892",
+      "order": 7,
+      "group": "c6e5f2ecf404d59e",
+      "width": 0,
+      "height": 0,
+      "label": "Batterie Alarm",
+      "labelPlacement": "left",
+      "labelAlignment": "left",
+      "colorForValue": [
+          {
+              "color": "#ff0000",
+              "value": "1",
+              "valueType": "num"
+          },
+          {
+              "color": "#008000",
+              "value": "0",
+              "valueType": "num"
+          }
+      ],
+      "allowColorForValueInMessage": false,
+      "shape": "circle",
+      "showGlow": true,
+      "name": "",
+      "x": 630,
+      "y": 580,
+      "wires": []
+  },
+  {
+      "id": "107a5b3d9d3bc004",
+      "type": "inject",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "1",
+      "payloadType": "num",
+      "x": 290,
+      "y": 600,
+      "wires": [
+          [
+              "753f80d55d088ce5"
+          ]
+      ]
+  },
+  {
+      "id": "f8b1b6db58b7944d",
+      "type": "mqtt in",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "topic": "solar/battery/warning/#",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 160,
+      "y": 680,
+      "wires": [
+          [
+              "06e0be6faaf7c709"
+          ]
+      ]
+  },
+  {
+      "id": "06e0be6faaf7c709",
+      "type": "switch",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "property": "payload",
+      "propertyType": "msg",
+      "rules": [
+          {
+              "t": "eq",
+              "v": "0",
+              "vt": "num"
+          },
+          {
+              "t": "eq",
+              "v": "1",
+              "vt": "num"
+          }
+      ],
+      "checkall": "true",
+      "repair": false,
+      "outputs": 2,
+      "x": 330,
+      "y": 680,
+      "wires": [
+          [],
+          [
+              "528caa2870bee72e"
+          ]
+      ]
+  },
+  {
+      "id": "528caa2870bee72e",
+      "type": "trigger",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "op1": "1",
+      "op2": "0",
+      "op1type": "num",
+      "op2type": "num",
+      "duration": "5",
+      "extend": true,
+      "overrideDelay": false,
+      "units": "s",
+      "reset": "",
+      "bytopic": "all",
+      "topic": "topic",
+      "outputs": 1,
+      "x": 480,
+      "y": 700,
+      "wires": [
+          [
+              "099793060a24169d"
+          ]
+      ]
+  },
+  {
+      "id": "099793060a24169d",
+      "type": "ui_led",
+      "z": "6e0fbe3dc2362892",
+      "order": 8,
+      "group": "c6e5f2ecf404d59e",
+      "width": 0,
+      "height": 0,
+      "label": "Batterie Warnung",
+      "labelPlacement": "left",
+      "labelAlignment": "left",
+      "colorForValue": [
+          {
+              "color": "#ff0000",
+              "value": "1",
+              "valueType": "num"
+          },
+          {
+              "color": "#008000",
+              "value": "0",
+              "valueType": "num"
+          }
+      ],
+      "allowColorForValueInMessage": false,
+      "shape": "circle",
+      "showGlow": true,
+      "name": "",
+      "x": 630,
+      "y": 700,
+      "wires": []
+  },
+  {
+      "id": "31592649b7b4813e",
+      "type": "inject",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "1",
+      "payloadType": "num",
+      "x": 290,
+      "y": 720,
+      "wires": [
+          [
+              "528caa2870bee72e"
+          ]
+      ]
+  },
+  {
+      "id": "59cc811ac82cc763",
+      "type": "change",
+      "z": "6e0fbe3dc2362892",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.opendtu.battery_full_soc",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 650,
+      "y": 860,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "3cd9dbd67a0d7b0d",
+      "type": "ui_numeric",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "label": "Batterie voll bei SOC",
+      "tooltip": "Grenze bei der die Batterie als voll betrachtet wird. Huawei schaltet 1% vorher ab. Power Limter schaltet bei diesem Stand auf aktiv ",
+      "group": "76927b91b4f8509b",
+      "order": 9,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "80",
+      "max": "100",
+      "step": "1",
+      "className": "",
+      "x": 480,
+      "y": 860,
+      "wires": [
+          [
+              "59cc811ac82cc763"
+          ]
+      ]
+  },
+  {
+      "id": "720e3ff6e2b3d775",
+      "type": "change",
+      "z": "6e0fbe3dc2362892",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.opendtu.battery_capacity",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 650,
+      "y": 900,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "3bac7bf8f23fd148",
+      "type": "ui_numeric",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "label": "Batteriekapazität",
+      "tooltip": "",
+      "group": "76927b91b4f8509b",
+      "order": 9,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "1000",
+      "max": "15000",
+      "step": "100",
+      "className": "",
+      "x": 490,
+      "y": 900,
+      "wires": [
+          [
+              "720e3ff6e2b3d775"
+          ]
+      ]
+  },
+  {
+      "id": "3e46376731c2dfcb",
+      "type": "inject",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "90",
+      "payloadType": "num",
+      "x": 310,
+      "y": 860,
+      "wires": [
+          [
+              "3cd9dbd67a0d7b0d"
+          ]
+      ]
+  },
+  {
+      "id": "7ece9d2c0d18157e",
+      "type": "inject",
+      "z": "6e0fbe3dc2362892",
+      "name": "",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "4800",
+      "payloadType": "num",
+      "x": 310,
+      "y": 900,
+      "wires": [
+          [
+              "3bac7bf8f23fd148"
+          ]
+      ]
+  },
+  {
+      "id": "aa30341bcc52e33c",
+      "type": "mqtt-broker",
+      "name": "Raspberry",
+      "broker": "localhost",
+      "port": "1883",
+      "clientid": "",
+      "autoConnect": true,
+      "usetls": false,
+      "protocolVersion": "4",
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "birthMsg": {},
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "closeMsg": {},
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": "",
+      "willMsg": {},
+      "userProps": "",
+      "sessionExpiry": ""
+  },
+  {
+      "id": "c6e5f2ecf404d59e",
+      "type": "ui_group",
+      "name": "Übersicht",
+      "tab": "e5b1aeb5977e428a",
+      "order": 2,
+      "disp": true,
+      "width": "6",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "76927b91b4f8509b",
+      "type": "ui_group",
+      "name": "Grundeinstellungen",
+      "tab": "e5b1aeb5977e428a",
+      "order": 6,
+      "disp": true,
+      "width": "6",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "e5b1aeb5977e428a",
+      "type": "ui_tab",
+      "name": "Home",
+      "icon": "dashboard",
+      "order": 1,
+      "disabled": false,
+      "hidden": false
+  }
+]

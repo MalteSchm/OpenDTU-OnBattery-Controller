@@ -1,0 +1,518 @@
+[
+  {
+      "id": "7307d77d7f13453e",
+      "type": "tab",
+      "label": "Durchschnittspreisberechnung",
+      "disabled": false,
+      "info": "",
+      "env": []
+  },
+  {
+      "id": "58cc412415166577",
+      "type": "function",
+      "z": "7307d77d7f13453e",
+      "name": "Strompreise der letzten zwei Wochen",
+      "func": "// Store data for later use\ncontext.global.set(\"epex.two_week_data\", msg.payload.data);\n\n\n// Calculate the sum of the last 14 days' data\nvar sum = msg.payload.data.reduce(function (acc, data) {\n\n    return acc + data.marketprice;\n}, 0);\n\n// Calculate the running average\nvar average = sum / msg.payload.data.length;\n\n// Store the average in the message payload\nmsg.payload = average / 1000;\n\ncontext.global.set(\"epex.two_week_average\", average / 1000);\n\n\nreturn msg;\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 790,
+      "y": 120,
+      "wires": [
+          [
+              "c74550478b428bac"
+          ]
+      ]
+  },
+  {
+      "id": "aadc5bafb016d33c",
+      "type": "http request",
+      "z": "7307d77d7f13453e",
+      "name": "",
+      "method": "GET",
+      "ret": "obj",
+      "paytoqs": "ignore",
+      "url": "https://api.awattar.de/v1/marketdata?start={{{start}}}&end={{{end}}}",
+      "tls": "646a995fc1b49a9e",
+      "persist": false,
+      "proxy": "",
+      "insecureHTTPParser": false,
+      "authType": "",
+      "senderr": false,
+      "headers": [],
+      "x": 550,
+      "y": 120,
+      "wires": [
+          [
+              "58cc412415166577"
+          ]
+      ]
+  },
+  {
+      "id": "e54033c494f6e53b",
+      "type": "inject",
+      "z": "7307d77d7f13453e",
+      "name": "Daily at 3pm",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "00 15 * * *",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 240,
+      "y": 120,
+      "wires": [
+          [
+              "19cfcf21465ae4b8"
+          ]
+      ]
+  },
+  {
+      "id": "c74550478b428bac",
+      "type": "debug",
+      "z": "7307d77d7f13453e",
+      "name": "debug 17",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 1040,
+      "y": 120,
+      "wires": []
+  },
+  {
+      "id": "19cfcf21465ae4b8",
+      "type": "function",
+      "z": "7307d77d7f13453e",
+      "name": "function 8",
+      "func": "\nmsg.end = msg.payload;\n\nmsg.start = msg.payload - 1209600000;\nreturn msg;\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 400,
+      "y": 120,
+      "wires": [
+          [
+              "aadc5bafb016d33c"
+          ]
+      ]
+  },
+  {
+      "id": "7e4cd656.31676",
+      "type": "inject",
+      "z": "7307d77d7f13453e",
+      "name": "Every Minute",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "60",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 240,
+      "y": 320,
+      "wires": [
+          [
+              "301f1c1fc3d604ec"
+          ]
+      ]
+  },
+  {
+      "id": "301f1c1fc3d604ec",
+      "type": "function",
+      "z": "7307d77d7f13453e",
+      "name": "Aktuellen Strompreis ermitteln",
+      "func": "// Store data for later use\nvar prices = context.global.get('epex.current_data.data') || 0;\n\nvar now = Date.now();\n\n// Set this to a save value\nvar current_price = {\"marketprice\": 0.3};\n\nprices.forEach((price) => {\n    if (price.end_timestamp > now && price.start_timestamp < now) {\n        current_price = price;\n    }\n});\n\n// We output in ct / kwh but store in euro / kwh here\nmsg.payload = (current_price.marketprice / 10).toFixed(2);\ncontext.global.set(\"epex.current_price\", current_price.marketprice / 1000);\n\nreturn msg;\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 770,
+      "y": 320,
+      "wires": [
+          [
+              "53670f6c80abd656",
+              "0a5f898b501fcc26"
+          ]
+      ]
+  },
+  {
+      "id": "53670f6c80abd656",
+      "type": "debug",
+      "z": "7307d77d7f13453e",
+      "name": "debug 20",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 1040,
+      "y": 320,
+      "wires": []
+  },
+  {
+      "id": "1483064eb6cb5a60",
+      "type": "http request",
+      "z": "7307d77d7f13453e",
+      "name": "",
+      "method": "GET",
+      "ret": "obj",
+      "paytoqs": "ignore",
+      "url": "https://api.awattar.de/v1/marketdata",
+      "tls": "646a995fc1b49a9e",
+      "persist": false,
+      "proxy": "",
+      "insecureHTTPParser": false,
+      "authType": "",
+      "senderr": false,
+      "headers": [],
+      "x": 550,
+      "y": 160,
+      "wires": [
+          [
+              "de2c4b11912cb70c"
+          ]
+      ]
+  },
+  {
+      "id": "b0aa7d946725cee5",
+      "type": "inject",
+      "z": "7307d77d7f13453e",
+      "name": "Daily",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "00 00 * * *",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 250,
+      "y": 160,
+      "wires": [
+          [
+              "1483064eb6cb5a60"
+          ]
+      ]
+  },
+  {
+      "id": "fe4cd0fefa54e8f8",
+      "type": "debug",
+      "z": "7307d77d7f13453e",
+      "name": "debug 21",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 1040,
+      "y": 160,
+      "wires": []
+  },
+  {
+      "id": "0a5f898b501fcc26",
+      "type": "ui_text",
+      "z": "7307d77d7f13453e",
+      "group": "c6e5f2ecf404d59e",
+      "order": 1,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Strompreis (ct)",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 1070,
+      "y": 380,
+      "wires": []
+  },
+  {
+      "id": "5ee08ef605507b67",
+      "type": "function",
+      "z": "7307d77d7f13453e",
+      "name": "Diagram format",
+      "func": "let prices_today = context.global.get(\"epex.daily_data.data\");\nif (prices_today.length === 0) {\n  return;\n}\n\nlet series = [\"Strompreis\"]\nlet data = [ [] ]\nlet labels = []\n\nprices_today.forEach((price) => {\n    data[0].push(price.marketprice / 10);\n\n    const d = new Date(price.start_timestamp);\n    const hour = d.getHours();\n    labels.push(hour);\n});\n\nmsg.payload = [{\n    labels,\n    data,\n    series\n    }]\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 880,
+      "y": 200,
+      "wires": [
+          [
+              "09c11a74f272edb9",
+              "52864010802b9db2"
+          ]
+      ]
+  },
+  {
+      "id": "09c11a74f272edb9",
+      "type": "debug",
+      "z": "7307d77d7f13453e",
+      "name": "debug 31",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "true",
+      "targetType": "full",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 1220,
+      "y": 160,
+      "wires": []
+  },
+  {
+      "id": "52864010802b9db2",
+      "type": "ui_chart",
+      "z": "7307d77d7f13453e",
+      "name": "",
+      "group": "6bb78d1c0e7e125e",
+      "order": 1,
+      "width": 0,
+      "height": 0,
+      "label": "Strompreis",
+      "chartType": "bar",
+      "legend": "false",
+      "xformat": "HH:mm:ss",
+      "interpolate": "linear",
+      "nodata": "",
+      "dot": false,
+      "ymin": "",
+      "ymax": "",
+      "removeOlder": 1,
+      "removeOlderPoints": "",
+      "removeOlderUnit": "3600",
+      "cutout": 0,
+      "useOneColor": true,
+      "useUTC": false,
+      "colors": [
+          "#1f77b4",
+          "#aec7e8",
+          "#ff7f0e",
+          "#2ca02c",
+          "#98df8a",
+          "#d62728",
+          "#ff9896",
+          "#9467bd",
+          "#c5b0d5"
+      ],
+      "outputs": 1,
+      "useDifferentColor": false,
+      "className": "",
+      "x": 1230,
+      "y": 200,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "c5b05799c45b58d6",
+      "type": "http request",
+      "z": "7307d77d7f13453e",
+      "name": "",
+      "method": "GET",
+      "ret": "obj",
+      "paytoqs": "ignore",
+      "url": "https://api.awattar.de/v1/marketdata",
+      "tls": "646a995fc1b49a9e",
+      "persist": false,
+      "proxy": "",
+      "insecureHTTPParser": false,
+      "authType": "",
+      "senderr": false,
+      "headers": [],
+      "x": 550,
+      "y": 260,
+      "wires": [
+          [
+              "ab265151d2ad61a3"
+          ]
+      ]
+  },
+  {
+      "id": "271f90f04e23cda8",
+      "type": "inject",
+      "z": "7307d77d7f13453e",
+      "name": "Every 6h",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "21600",
+      "crontab": "",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 240,
+      "y": 260,
+      "wires": [
+          [
+              "c5b05799c45b58d6"
+          ]
+      ]
+  },
+  {
+      "id": "9cec67dc3cfdeb32",
+      "type": "debug",
+      "z": "7307d77d7f13453e",
+      "name": "debug 32",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 1040,
+      "y": 260,
+      "wires": []
+  },
+  {
+      "id": "de2c4b11912cb70c",
+      "type": "change",
+      "z": "7307d77d7f13453e",
+      "name": "Store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "epex.daily_data",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 690,
+      "y": 160,
+      "wires": [
+          [
+              "fe4cd0fefa54e8f8",
+              "5ee08ef605507b67"
+          ]
+      ]
+  },
+  {
+      "id": "ab265151d2ad61a3",
+      "type": "change",
+      "z": "7307d77d7f13453e",
+      "name": "Store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "epex.current_data",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 690,
+      "y": 260,
+      "wires": [
+          [
+              "9cec67dc3cfdeb32"
+          ]
+      ]
+  },
+  {
+      "id": "646a995fc1b49a9e",
+      "type": "tls-config",
+      "name": "",
+      "cert": "",
+      "key": "",
+      "ca": "",
+      "certname": "",
+      "keyname": "",
+      "caname": "",
+      "servername": "",
+      "verifyservercert": false,
+      "alpnprotocol": ""
+  },
+  {
+      "id": "c6e5f2ecf404d59e",
+      "type": "ui_group",
+      "name": "Übersicht",
+      "tab": "e5b1aeb5977e428a",
+      "order": 2,
+      "disp": true,
+      "width": "6",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "6bb78d1c0e7e125e",
+      "type": "ui_group",
+      "name": "Vorhersage",
+      "tab": "e5b1aeb5977e428a",
+      "order": 6,
+      "disp": true,
+      "width": "6",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "e5b1aeb5977e428a",
+      "type": "ui_tab",
+      "name": "Home",
+      "icon": "dashboard",
+      "order": 1,
+      "disabled": false,
+      "hidden": false
+  }
+]

@@ -1,0 +1,177 @@
+[
+  {
+      "id": "683fd7.e63da028",
+      "type": "tab",
+      "label": "Aktueller Ertrag",
+      "disabled": false,
+      "info": ""
+  },
+  {
+      "id": "f1922c7b5d83a0e9",
+      "type": "mqtt in",
+      "z": "683fd7.e63da028",
+      "name": "",
+      "topic": "sbfspot_2130252068",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 180,
+      "y": 140,
+      "wires": [
+          [
+              "74938cbb9221e0a6"
+          ]
+      ]
+  },
+  {
+      "id": "74938cbb9221e0a6",
+      "type": "join",
+      "z": "683fd7.e63da028",
+      "name": "",
+      "mode": "custom",
+      "build": "object",
+      "property": "payload",
+      "propertyType": "msg",
+      "key": "topic",
+      "joiner": "\\n",
+      "joinerType": "str",
+      "accumulate": true,
+      "timeout": "",
+      "count": "1",
+      "reduceRight": false,
+      "reduceExp": "",
+      "reduceInit": "",
+      "reduceInitType": "",
+      "reduceFixup": "",
+      "x": 430,
+      "y": 140,
+      "wires": [
+          [
+              "731a26f1ddd966be",
+              "4fc39bcadd3b5e49"
+          ]
+      ]
+  },
+  {
+      "id": "4fc39bcadd3b5e49",
+      "type": "debug",
+      "z": "683fd7.e63da028",
+      "name": "debug 23",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 600,
+      "y": 220,
+      "wires": []
+  },
+  {
+      "id": "731a26f1ddd966be",
+      "type": "function",
+      "z": "683fd7.e63da028",
+      "name": "function 13",
+      "func": "var payload = msg.payload; //get payload\n\nvar smaPower = 0;\nif (payload.sbfspot_2130252068) {\n    smaPower = payload.sbfspot_2130252068.PACTot;\n}\nvar hoymilesPower = payload[\"solar/116183074682/0/power\"] || 0;\n\nmsg.payload = {\n    Momentanleistung: smaPower + hoymilesPower\n};\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 600,
+      "y": 140,
+      "wires": [
+          [
+              "da4da63f2a30635a",
+              "255699f9f3c032dd"
+          ]
+      ]
+  },
+  {
+      "id": "da4da63f2a30635a",
+      "type": "mqtt out",
+      "z": "683fd7.e63da028",
+      "name": "",
+      "topic": "home/power/solarTotal",
+      "qos": "0",
+      "retain": "false",
+      "respTopic": "",
+      "contentType": "",
+      "userProps": "",
+      "correl": "",
+      "expiry": "",
+      "broker": "aa30341bcc52e33c",
+      "x": 800,
+      "y": 140,
+      "wires": []
+  },
+  {
+      "id": "255699f9f3c032dd",
+      "type": "debug",
+      "z": "683fd7.e63da028",
+      "name": "debug 24",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 800,
+      "y": 220,
+      "wires": []
+  },
+  {
+      "id": "35951ce89ce8800c",
+      "type": "mqtt in",
+      "z": "683fd7.e63da028",
+      "name": "",
+      "topic": "solar/116183074682/0/power",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 160,
+      "y": 200,
+      "wires": [
+          [
+              "74938cbb9221e0a6"
+          ]
+      ]
+  },
+  {
+      "id": "aa30341bcc52e33c",
+      "type": "mqtt-broker",
+      "name": "Raspberry",
+      "broker": "localhost",
+      "port": "1883",
+      "clientid": "",
+      "autoConnect": true,
+      "usetls": false,
+      "protocolVersion": "4",
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "birthMsg": {},
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "closeMsg": {},
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": "",
+      "willMsg": {},
+      "userProps": "",
+      "sessionExpiry": ""
+  }
+]

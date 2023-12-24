@@ -1,0 +1,277 @@
+[
+  {
+      "id": "8a1442584b5c9904",
+      "type": "tab",
+      "label": "Dynamic Power Limiter",
+      "disabled": false,
+      "info": "",
+      "env": []
+  },
+  {
+      "id": "8ff4394bc7143c86",
+      "type": "function",
+      "z": "8a1442584b5c9904",
+      "name": "Transform",
+      "func": "var soc = global.get('state.opendtu.soc') || 0;\n\nvar epex_current_price = global.get('epex.current_price');\nif (typeof epex_current_price == \"undefined\") { epex_current_price = 0}\n\nvar dpl_X_price = global.get('ui.opendtu.dpl_X_price') / 100;\nif (typeof dpl_X_price == \"undefined\") { dpl_X_price = 0.1 }\n\nvar car_X_price = global.get('ui.opendtu.car_X_price') / 100 || 0.3;\nif (typeof car_X_price == \"undefined\") { car_X_price = 0.05 }\n\nvar battery_full_soc = global.get('ui.opendtu.battery_full_soc');\nif (typeof battery_full_soc == \"undefined\") { battery_full_soc = 90 }\n\nvar carState = global.get('state.car') || false;\n\nvar msg = {};\nmsg.payload = 0\n\n// Enable if battery is full\nif (soc >= battery_full_soc) {\n    msg.payload = 0;  // Fully enable\n    msg.text = \"Aktiv - Batterie voll\";\n    return msg;\n}\n\nnode.warn(\"price\" + epex_current_price);\nnode.warn(\"dpl\" + dpl_X_price);\n// Disable if price low\nif (epex_current_price < dpl_X_price) {\n    msg.payload = 1;  // Fully disable\n    msg.text = \"Inaktiv / Strompreis niedrig\";\n    return msg;\n}\n\nif (carState == \"charging\") {\n    // Disable if price below crossover for car and car is charging\n    if (epex_current_price < car_X_price) {\n        msg.payload = 1;  // Fully disable\n        msg.text = \"Inaktiv / Auto läd / Strompreis niedrig\";\n    } else {\n        msg.payload = 2;  // Enable solar passthrough\n        msg.text = \"Solar Passthrough zum Auto\";\n    }\n    return msg;\n}\n\nmsg.payload = 0;  // Normal operation\nmsg.text = \"Aktiv\";\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 960,
+      "y": 120,
+      "wires": [
+          [
+              "bff9a5dd3d451de1",
+              "53096ea9d7083ef1",
+              "b505dea9d6112b4b"
+          ]
+      ]
+  },
+  {
+      "id": "bff9a5dd3d451de1",
+      "type": "mqtt out",
+      "z": "8a1442584b5c9904",
+      "name": "",
+      "topic": "solar/powerlimiter/cmd/mode",
+      "qos": "",
+      "retain": "",
+      "respTopic": "",
+      "contentType": "",
+      "userProps": "",
+      "correl": "",
+      "expiry": "",
+      "broker": "aa30341bcc52e33c",
+      "x": 1180,
+      "y": 120,
+      "wires": []
+  },
+  {
+      "id": "6ef0e8c829fc673f",
+      "type": "inject",
+      "z": "8a1442584b5c9904",
+      "name": "periodic trigger",
+      "props": [
+          {
+              "p": "payload"
+          }
+      ],
+      "repeat": "60",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 800,
+      "y": 120,
+      "wires": [
+          [
+              "8ff4394bc7143c86"
+          ]
+      ]
+  },
+  {
+      "id": "53096ea9d7083ef1",
+      "type": "debug",
+      "z": "8a1442584b5c9904",
+      "name": "debug 18",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 1120,
+      "y": 240,
+      "wires": []
+  },
+  {
+      "id": "d6ae3af4d53574d0",
+      "type": "change",
+      "z": "8a1442584b5c9904",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.opendtu.dpl_X_price",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 510,
+      "y": 120,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "c3b8dccef33a484a",
+      "type": "change",
+      "z": "8a1442584b5c9904",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.opendtu.car_X_price",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 510,
+      "y": 160,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "b505dea9d6112b4b",
+      "type": "ui_text",
+      "z": "8a1442584b5c9904",
+      "group": "55d02026703d8522",
+      "order": 1,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Status:",
+      "format": "{{msg.text}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 1120,
+      "y": 180,
+      "wires": []
+  },
+  {
+      "id": "ae6d65948cd7e076",
+      "type": "ui_numeric",
+      "z": "8a1442584b5c9904",
+      "name": "",
+      "label": "DPL aktiv ab",
+      "tooltip": "Liegt der Strompreis unter dieser Grenze wird der Power limiter abgeschaltet",
+      "group": "55d02026703d8522",
+      "order": 3,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "-10",
+      "max": "30",
+      "step": "0.1",
+      "className": "",
+      "x": 370,
+      "y": 120,
+      "wires": [
+          [
+              "d6ae3af4d53574d0"
+          ]
+      ]
+  },
+  {
+      "id": "4325ec05ae13ac80",
+      "type": "ui_numeric",
+      "z": "8a1442584b5c9904",
+      "name": "",
+      "label": "Solar PT zum Auto ab",
+      "tooltip": "Liegt der Strompreis über dem eingestellten Wert wird Solarstrom (Solar Passthrough) zum Auto laden verwendet. Darunter wird die Solarenergie im Hausakku gespeichert",
+      "group": "55d02026703d8522",
+      "order": 4,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "-10",
+      "max": "30",
+      "step": "0.1",
+      "className": "",
+      "x": 340,
+      "y": 160,
+      "wires": [
+          [
+              "c3b8dccef33a484a"
+          ]
+      ]
+  },
+  {
+      "id": "ff2111eb145eab38",
+      "type": "ui_text",
+      "z": "8a1442584b5c9904",
+      "group": "55d02026703d8522",
+      "order": 2,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Strompreisgrenzen",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 350,
+      "y": 80,
+      "wires": []
+  },
+  {
+      "id": "aa30341bcc52e33c",
+      "type": "mqtt-broker",
+      "name": "Raspberry",
+      "broker": "localhost",
+      "port": "1883",
+      "clientid": "",
+      "autoConnect": true,
+      "usetls": false,
+      "protocolVersion": "4",
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "birthMsg": {},
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "closeMsg": {},
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": "",
+      "willMsg": {},
+      "userProps": "",
+      "sessionExpiry": ""
+  },
+  {
+      "id": "55d02026703d8522",
+      "type": "ui_group",
+      "name": "Dynamic Power Limiter",
+      "tab": "e5b1aeb5977e428a",
+      "order": 3,
+      "disp": true,
+      "width": "6",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "e5b1aeb5977e428a",
+      "type": "ui_tab",
+      "name": "Home",
+      "icon": "dashboard",
+      "order": 1,
+      "disabled": false,
+      "hidden": false
+  }
+]

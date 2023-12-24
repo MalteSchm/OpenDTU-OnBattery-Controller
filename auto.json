@@ -1,0 +1,415 @@
+[
+  {
+      "id": "bb10d8ab69b25398",
+      "type": "tab",
+      "label": "Auto",
+      "disabled": false,
+      "info": "",
+      "env": []
+  },
+  {
+      "id": "4ec712897913b81b",
+      "type": "mqtt in",
+      "z": "bb10d8ab69b25398",
+      "name": "",
+      "topic": "teslamate/cars/1/state",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 960,
+      "y": 60,
+      "wires": [
+          [
+              "968e9679d29e92f4"
+          ]
+      ]
+  },
+  {
+      "id": "968e9679d29e92f4",
+      "type": "change",
+      "z": "bb10d8ab69b25398",
+      "name": "car_state",
+      "rules": [
+          {
+              "t": "set",
+              "p": "state.car",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 1160,
+      "y": 60,
+      "wires": [
+          [
+              "301e7325b64f48be"
+          ]
+      ]
+  },
+  {
+      "id": "301e7325b64f48be",
+      "type": "ui_text",
+      "z": "bb10d8ab69b25398",
+      "group": "756870f09af4bd03",
+      "order": 3,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Car State",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 1340,
+      "y": 60,
+      "wires": []
+  },
+  {
+      "id": "b1eb87f8019b640f",
+      "type": "change",
+      "z": "bb10d8ab69b25398",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "ui.tsc.car_X_price",
+              "pt": "global",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 590,
+      "y": 60,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "eec996d2fe78177d",
+      "type": "function",
+      "z": "bb10d8ab69b25398",
+      "name": "Transform",
+      "func": "var epex_current_price = global.get('epex.current_price');\nif (typeof epex_current_price == \"undefined\") {\n    epex_current_price = 0.3;\n}\n\nvar car_X_price = global.get('ui.tsc.car_X_price') || 0;\ncar_X_price = car_X_price / 100; // convert to euros\nvar maximum_power_enabled = flow.get('maximum_power_enabled') || false;\n\nvar msg = {};\nmsg.payload = 0\n\n// Enable full power if price is low\nif (epex_current_price < car_X_price && !maximum_power_enabled) {\n\n    var current_settings = flow.get('tsc.car_settings');\n    if (typeof current_settings == \"undefined\") {\n        // TODO\n    }\n    flow.set(\"old_charge_mode\", current_settings[1].chargeMode);\n    current_settings[1].chargeMode = 0;\n    msg.payload = JSON.stringify(current_settings[1]);\n    msg.headers = {};\n    msg.headers['Content-Type'] = 'application/json';\n    msg.text = \"Volle Leistung\";\n    flow.set(\"maximum_power_enabled\", true);\n    return msg;\n}\n\n// Restore charge mode if price is high\nif (epex_current_price > car_X_price && maximum_power_enabled) {\n    \n    var current_settings = flow.get('tsc.car_settings');\n    if (typeof current_settings == \"undefined\") {\n        // TODO\n    }\n\n    current_settings[1].chargeMode = flow.get(\"old_charge_mode\") || 0;\n    msg.payload = JSON.stringify(current_settings[1]);\n    msg.headers = {};\n    msg.headers['Content-Type'] = 'application/json';\n    msg.text = \"TSC aktiv\";\n    flow.set(\"maximum_power_enabled\", false);\n    return msg;\n}\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 460,
+      "y": 340,
+      "wires": [
+          [
+              "0e75480e512de449",
+              "030d992b252761a2",
+              "f087a77c8f9c0cb2"
+          ]
+      ]
+  },
+  {
+      "id": "0e75480e512de449",
+      "type": "debug",
+      "z": "bb10d8ab69b25398",
+      "name": "debug 27",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "payload",
+      "targetType": "msg",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 760,
+      "y": 340,
+      "wires": []
+  },
+  {
+      "id": "d7e301bab308abe1",
+      "type": "inject",
+      "z": "bb10d8ab69b25398",
+      "name": "",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "60",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 290,
+      "y": 120,
+      "wires": [
+          [
+              "f8ca654d922e67ec"
+          ]
+      ]
+  },
+  {
+      "id": "030d992b252761a2",
+      "type": "ui_text",
+      "z": "bb10d8ab69b25398",
+      "group": "756870f09af4bd03",
+      "order": 1,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Status",
+      "format": "{{msg.text}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 650,
+      "y": 400,
+      "wires": []
+  },
+  {
+      "id": "f8ca654d922e67ec",
+      "type": "http request",
+      "z": "bb10d8ab69b25398",
+      "name": "",
+      "method": "GET",
+      "ret": "obj",
+      "paytoqs": "ignore",
+      "url": "http://raspberrypi:7190/api/Index/GetCarBaseSettingsOfEnabledCars",
+      "tls": "",
+      "persist": false,
+      "proxy": "",
+      "insecureHTTPParser": false,
+      "authType": "",
+      "senderr": false,
+      "headers": [],
+      "x": 450,
+      "y": 120,
+      "wires": [
+          [
+              "781a9e8d717c0b84"
+          ]
+      ]
+  },
+  {
+      "id": "781a9e8d717c0b84",
+      "type": "change",
+      "z": "bb10d8ab69b25398",
+      "name": "store",
+      "rules": [
+          {
+              "t": "set",
+              "p": "tsc.car_settings",
+              "pt": "flow",
+              "to": "payload",
+              "tot": "msg"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 590,
+      "y": 120,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "b223ce9d8a9017a5",
+      "type": "inject",
+      "z": "bb10d8ab69b25398",
+      "name": "",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "60",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 290,
+      "y": 340,
+      "wires": [
+          [
+              "eec996d2fe78177d"
+          ]
+      ]
+  },
+  {
+      "id": "f087a77c8f9c0cb2",
+      "type": "http request",
+      "z": "bb10d8ab69b25398",
+      "name": "",
+      "method": "POST",
+      "ret": "txt",
+      "paytoqs": "ignore",
+      "url": "http://raspberrypi:7190/api/Index/UpdateCarBaseSettings",
+      "tls": "",
+      "persist": false,
+      "proxy": "",
+      "insecureHTTPParser": false,
+      "authType": "",
+      "senderr": false,
+      "headers": [],
+      "x": 670,
+      "y": 280,
+      "wires": [
+          [
+              "0a17aa339ffc6401"
+          ]
+      ]
+  },
+  {
+      "id": "0a17aa339ffc6401",
+      "type": "debug",
+      "z": "bb10d8ab69b25398",
+      "name": "debug 28",
+      "active": false,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 840,
+      "y": 280,
+      "wires": []
+  },
+  {
+      "id": "75456581e89cc993",
+      "type": "ui_numeric",
+      "z": "bb10d8ab69b25398",
+      "name": "",
+      "label": "Auto voll aktiv ab Strompreis",
+      "tooltip": "Liegt der Strompreis unter dieser Grenze wird das Auto mit voller Leistung geladen",
+      "group": "756870f09af4bd03",
+      "order": 4,
+      "width": 0,
+      "height": 0,
+      "wrap": false,
+      "passthru": true,
+      "topic": "topic",
+      "topicType": "msg",
+      "format": "{{value}}",
+      "min": "-10",
+      "max": "30",
+      "step": "0.1",
+      "className": "",
+      "x": 320,
+      "y": 60,
+      "wires": [
+          [
+              "b1eb87f8019b640f"
+          ]
+      ]
+  },
+  {
+      "id": "db870fb7a0ca586c",
+      "type": "mqtt in",
+      "z": "bb10d8ab69b25398",
+      "name": "",
+      "topic": "teslamate/cars/1/usable_battery_level",
+      "qos": "2",
+      "datatype": "auto-detect",
+      "broker": "aa30341bcc52e33c",
+      "nl": false,
+      "rap": true,
+      "rh": 0,
+      "inputs": 0,
+      "x": 1010,
+      "y": 120,
+      "wires": [
+          [
+              "2295338c87b2bfa9"
+          ]
+      ]
+  },
+  {
+      "id": "2295338c87b2bfa9",
+      "type": "ui_text",
+      "z": "bb10d8ab69b25398",
+      "group": "756870f09af4bd03",
+      "order": 2,
+      "width": 0,
+      "height": 0,
+      "name": "",
+      "label": "Car SoC",
+      "format": "{{msg.payload}}",
+      "layout": "row-spread",
+      "className": "",
+      "x": 1340,
+      "y": 120,
+      "wires": []
+  },
+  {
+      "id": "aa30341bcc52e33c",
+      "type": "mqtt-broker",
+      "name": "Raspberry",
+      "broker": "localhost",
+      "port": "1883",
+      "clientid": "",
+      "autoConnect": true,
+      "usetls": false,
+      "protocolVersion": "4",
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "birthMsg": {},
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "closeMsg": {},
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": "",
+      "willMsg": {},
+      "userProps": "",
+      "sessionExpiry": ""
+  },
+  {
+      "id": "756870f09af4bd03",
+      "type": "ui_group",
+      "name": "Tesla Solar Charger",
+      "tab": "e5b1aeb5977e428a",
+      "order": 5,
+      "disp": true,
+      "width": "6",
+      "collapse": false,
+      "className": ""
+  },
+  {
+      "id": "e5b1aeb5977e428a",
+      "type": "ui_tab",
+      "name": "Home",
+      "icon": "dashboard",
+      "order": 1,
+      "disabled": false,
+      "hidden": false
+  }
+]
