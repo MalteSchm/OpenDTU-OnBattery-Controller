@@ -50,3 +50,7 @@ Sollte jemand zu Tibber wechseln wollen: Hier wäre ein Einladungslink. Gibt fü
 # Screenshot
 
 ![Screenshot](Screenshot.png)
+
+# Installation 
+
+![Node Red manual](https://nodered.org/docs/user-guide/editor/workspace/import-export)
